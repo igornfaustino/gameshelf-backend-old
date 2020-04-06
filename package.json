@@ -6,7 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"tsc": "tsc",
-		"dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
+		"dev": "ts-node-dev -r dotenv/config --respawn --transpileOnly ./src/app.ts",
 		"prod": "tsc && node ./build/app.js",
 		"sequelize:init": "npx sequelize-cli init"
 	},
@@ -16,6 +16,7 @@
 	"dependencies": {
 		"apollo-server-express": "^2.11.0",
 		"cors": "^2.8.5",
+		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
 		"igdb-api-node": "^4.0.3",
 		"reflect-metadata": "^0.1.13",
