@@ -32,3 +32,8 @@ export interface APIPlatformData {
 	abbreviation: string;
 	id: number;
 }
+
+export interface APIGenreData {
+	name: string;
+	id: number;
+}

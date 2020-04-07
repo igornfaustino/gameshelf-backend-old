@@ -4,6 +4,7 @@ import {
 	APIGameData,
 	APIGameDataWithCoverURL,
 	APIPlatformData,
+	APIGenreData,
 } from '../types/api';
 import { binarySearch } from './commons';
 import { platform } from 'os';
@@ -45,6 +46,19 @@ export const getCovers = (
 					url: cover.url.slice(2).replace('t_thumb', 't_cover_big'),
 				}))
 				.sort((a, b) => a.id - b.id);
+		})
+		.catch((ex) => {
+			throw ex;
+		});
+
+export const getGenres = (platformsId: number[], limit: number = 50) =>
+	client
+		.fields(['id', 'name'])
+		.limit(limit)
+		.where(`id = (${platformsId.join(',')})`)
+		.request('/genres')
+		.then((res: { data: APIGenreData[] }) => {
+			return res.data;
 		})
 		.catch((ex) => {
 			throw ex;
