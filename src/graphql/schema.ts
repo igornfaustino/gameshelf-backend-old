@@ -1,6 +1,10 @@
 const { gql } = require('apollo-server-express');
 
 module.exports = gql`
+	type Genre {
+		id: ID
+		name: String!
+	}
 	type Platform {
 		id: ID
 		name: String!
@@ -10,7 +14,7 @@ module.exports = gql`
 		id: ID
 		name: String
 		coverURL: String
-		genres: [String]
+		genres: [Genre]
 		platforms: [Platform]
 		similarGames: [Game]
 	}

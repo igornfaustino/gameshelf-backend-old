@@ -46,7 +46,7 @@ export const apiGameToGraphQLFormat = (
 	games.map((game) => ({
 		name: game.name,
 		id: game.id,
-		genres: game.genres,
+		genresId: game.genres,
 		platformsId: game.platforms,
 		similarGamesId: game.similar_games,
 		coverURL: game.cover?.toString(),
