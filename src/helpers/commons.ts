@@ -1,4 +1,8 @@
-import { APIGameData } from '../types/api';
+import {
+	APIGameData,
+	APIGameDataWithCoverURL,
+	APICoverData,
+} from '../types/api';
 
 export function binarySearch<T>(
 	list: T[],
@@ -35,3 +39,43 @@ export const getUniqueGenresId = (games: APIGameData[]) =>
 			return [...genresIds, ...gameGenres];
 		}, []),
 	);
+
+export const apiGameToGraphQLFormat = (
+	games: (APIGameData | APIGameDataWithCoverURL)[],
+): Game[] =>
+	games.map((game) => ({
+		name: game.name,
+		id: game.id,
+		genres: game.genres,
+		platformsId: game.platforms,
+		similarGamesId: game.similar_games,
+		coverURL: game.cover?.toString(),
+	}));
+
+export const joinGamesAndCovers = (
+	games: APIGameData[],
+	covers: APICoverData[],
+): APIGameDataWithCoverURL[] => {
+	return games.map((game) => {
+		const coverId = game.cover;
+		if (!coverId)
+			return {
+				...game,
+				cover: undefined,
+			};
+		const cover = binarySearch<APICoverData>(
+			covers,
+			coverId,
+			(cover) => cover?.id,
+		);
+		if (!cover)
+			return {
+				...game,
+				cover: undefined,
+			};
+		return {
+			...game,
+			cover: cover.url,
+		};
+	});
+};

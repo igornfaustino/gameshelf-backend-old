@@ -25,3 +25,6 @@ export const saveGenresToDatabase = (games: APIGameData[]) => {
 	const requestGenresSet = Array.from(getUniqueGenresId(games));
 	console.log(requestGenresSet);
 };
+
+export const getPlatformsFromIds = (ids: string[]) =>
+	Platform.findAll({ where: { id: ids } });

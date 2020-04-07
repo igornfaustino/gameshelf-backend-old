@@ -1,12 +1,17 @@
 const { gql } = require('apollo-server-express');
 
 module.exports = gql`
+	type Platform {
+		id: ID
+		name: String!
+		abbreviation: String
+	}
 	type Game {
 		id: ID
 		name: String
 		coverURL: String
 		genres: [String]
-		platforms: [String]
+		platforms: [Platform]
 		similarGames: [Game]
 	}
 	type Query {

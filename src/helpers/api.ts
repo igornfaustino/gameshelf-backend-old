@@ -6,6 +6,7 @@ import {
 	APIPlatformData,
 } from '../types/api';
 import { binarySearch } from './commons';
+import { platform } from 'os';
 
 const client = igdb(process.env.IGDB_API_KEY);
 
@@ -61,43 +62,3 @@ export const getPlatforms = (platformsId: number[], limit: number = 50) =>
 		.catch((ex) => {
 			throw ex;
 		});
-
-export const apiGameToGraphQLFormat = (
-	games: (APIGameData | APIGameDataWithCoverURL)[],
-) =>
-	games.map((game) => ({
-		name: game.name,
-		id: game.id,
-		genres: game.genres,
-		platforms: game.platforms,
-		similarGames: game.similar_games,
-		coverURL: game.cover,
-	}));
-
-export const joinGamesAndCovers = (
-	games: APIGameData[],
-	covers: APICoverData[],
-): APIGameDataWithCoverURL[] => {
-	return games.map((game) => {
-		const coverId = game.cover;
-		if (!coverId)
-			return {
-				...game,
-				cover: undefined,
-			};
-		const cover = binarySearch<APICoverData>(
-			covers,
-			coverId,
-			(cover) => cover?.id,
-		);
-		if (!cover)
-			return {
-				...game,
-				cover: undefined,
-			};
-		return {
-			...game,
-			cover: cover.url,
-		};
-	});
-};

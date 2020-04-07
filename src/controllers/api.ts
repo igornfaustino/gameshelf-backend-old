@@ -1,11 +1,7 @@
 import { SearchArgs, APIGameData } from '../types/api';
-import {
-	searchGameByName,
-	getCovers,
-	joinGamesAndCovers,
-	apiGameToGraphQLFormat,
-} from '../helpers/api';
+import { searchGameByName, getCovers } from '../helpers/api';
 import { saveGenresToDatabase, savePlatformsToDatabase } from '../helpers/db';
+import { joinGamesAndCovers, apiGameToGraphQLFormat } from '../helpers/commons';
 
 interface gamesAxioResponse {
 	data: APIGameData[];
