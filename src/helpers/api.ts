@@ -3,6 +3,7 @@ import {
 	APICoverData,
 	APIGameData,
 	APIGameDataWithCoverURL,
+	APIPlatformData,
 } from '../types/api';
 import { binarySearch } from './commons';
 
@@ -48,6 +49,19 @@ export const getCovers = (
 			throw ex;
 		});
 
+export const getPlatforms = (platformsId: number[], limit: number = 50) =>
+	client
+		.fields(['id', 'name', 'abbreviation'])
+		.limit(limit)
+		.where(`id = (${platformsId.join(',')})`)
+		.request('/platforms')
+		.then((res: { data: APIPlatformData[] }) => {
+			return res.data;
+		})
+		.catch((ex) => {
+			throw ex;
+		});
+
 export const apiGameToGraphQLFormat = (
 	games: (APIGameData | APIGameDataWithCoverURL)[],
 ) =>
@@ -76,7 +90,6 @@ export const joinGamesAndCovers = (
 			coverId,
 			(cover) => cover?.id,
 		);
-		console.log(cover);
 		if (!cover)
 			return {
 				...game,

@@ -1,3 +1,5 @@
+import { APIGameData } from '../types/api';
+
 export function binarySearch<T>(
 	list: T[],
 	value: number,
@@ -17,3 +19,19 @@ export function binarySearch<T>(
 		}
 	}
 }
+
+export const getUniquePlatformsId = (games: APIGameData[]) =>
+	new Set(
+		games.reduce<string[]>((platformsIds, game) => {
+			const gamePlatforms = game.platforms || [];
+			return [...platformsIds, ...gamePlatforms];
+		}, []),
+	);
+
+export const getUniqueGenresId = (games: APIGameData[]) =>
+	new Set(
+		games.reduce<string[]>((genresIds, game) => {
+			const gameGenres = game.genres || [];
+			return [...genresIds, ...gameGenres];
+		}, []),
+	);

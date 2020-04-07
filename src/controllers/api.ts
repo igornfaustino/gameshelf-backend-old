@@ -5,6 +5,7 @@ import {
 	joinGamesAndCovers,
 	apiGameToGraphQLFormat,
 } from '../helpers/api';
+import { saveGenresToDatabase, savePlatformsToDatabase } from '../helpers/db';
 
 interface gamesAxioResponse {
 	data: APIGameData[];
@@ -24,6 +25,9 @@ export const searchGames = async (
 		);
 		const games = res.data;
 		const coversId = <number[]>games.map(({ cover }) => cover).filter(Boolean);
+		await saveGenresToDatabase(games);
+		await savePlatformsToDatabase(games);
+
 		const covers = await getCovers(coversId);
 		const gamesWithCover = joinGamesAndCovers(games, covers);
 		return apiGameToGraphQLFormat(gamesWithCover);
