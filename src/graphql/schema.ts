@@ -7,9 +7,14 @@ module.exports = gql`
 		coverURL: String
 		genres: [String]
 		platforms: [String]
-		similar_games: [Game]
+		similarGames: [Game]
 	}
 	type Query {
-		searchGame(search: String!, plataform: Int, limit: Int, offset: Int): [Game]
+		searchGames(
+			search: String!
+			plataform: Int
+			limit: Int
+			offset: Int
+		): [Game]
 	}
 `;
