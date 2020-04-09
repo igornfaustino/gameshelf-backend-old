@@ -1,4 +1,12 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import {
+	Table,
+	Column,
+	Model,
+	DataType,
+	BelongsToMany,
+} from 'sequelize-typescript';
+import { Game } from './game';
+import { GameGenre } from './gameGenre';
 
 @Table({
 	tableName: 'genres',
@@ -14,4 +22,7 @@ export class Genre extends Model<Genre> {
 
 	@Column
 	name!: string;
+
+	@BelongsToMany(() => Game, () => GameGenre, 'genreId')
+	games!: Game[];
 }
