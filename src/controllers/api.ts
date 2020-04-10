@@ -3,18 +3,13 @@ import { searchGameByName, getCovers } from '../helpers/api';
 import { saveGenresToDatabase, savePlatformsToDatabase } from '../helpers/db';
 import { joinGamesAndCovers, apiGameToGraphQLFormat } from '../helpers/commons';
 
-interface gamesAxioResponse {
+interface gamesAxiosResponse {
 	data: APIGameData[];
 }
 
-export const searchGames = async (
-	_parents: any,
-	args: SearchArgs,
-	_context: any,
-	_info: any,
-) => {
+export const searchGames = async (_parents: any, args: SearchArgs) => {
 	try {
-		const res: gamesAxioResponse = await searchGameByName(
+		const res: gamesAxiosResponse = await searchGameByName(
 			args.search,
 			args.limit,
 			args.offset,
