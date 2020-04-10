@@ -18,15 +18,28 @@ interface searchOption {
 }
 export const searchGameByName = (
 	search: string,
+	genres: undefined | number[],
+	platforms: undefined | number[],
 	limit: number = 50,
 	offset: number = 0,
-) =>
-	client
+) => {
+	let query = client
 		.fields(['id', 'name', 'cover', 'genres', 'platforms', 'similar_games'])
 		.limit(limit)
 		.offset(offset)
-		.search(search)
-		.request('/games');
+		.search(search);
+	const whereStatement = [];
+	if (genres) {
+		whereStatement.push(`genres=(${genres.join(',')})`);
+	}
+	if (platforms) {
+		whereStatement.push(`platforms=(${platforms.join(',')})`);
+	}
+	if (genres || platform) {
+		query.where(whereStatement.join('&'));
+	}
+	return query.request('/games');
+};
 
 export const getCovers = (
 	coversId: number[],

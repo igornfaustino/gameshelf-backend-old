@@ -23,7 +23,13 @@ module.exports = gql`
 		name: String
 	}
 	type Query {
-		searchGames(search: String!, platform: Int, limit: Int, offset: Int): [Game]
+		searchGames(
+			search: String!
+			platforms: [Int]
+			genres: [Int]
+			limit: Int
+			offset: Int
+		): [Game]
 		platforms: [Platform]
 		genres: [Genre]
 		lists: [List]

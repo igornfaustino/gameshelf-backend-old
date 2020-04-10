@@ -2,6 +2,8 @@ export interface SearchArgs {
 	search: string;
 	offset?: number;
 	limit?: number;
+	platforms?: number[];
+	genres?: number[];
 }
 
 export interface APIGameData {

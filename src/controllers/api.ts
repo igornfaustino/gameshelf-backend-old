@@ -11,6 +11,8 @@ export const searchGames = async (_parents: any, args: SearchArgs) => {
 	try {
 		const res: gamesAxiosResponse = await searchGameByName(
 			args.search,
+			args.genres,
+			args.platforms,
 			args.limit,
 			args.offset,
 		);
