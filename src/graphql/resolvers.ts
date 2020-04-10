@@ -1,13 +1,14 @@
 import { searchGames } from '../controllers/api';
-import { getPlatforms } from '../controllers/platforms';
+import { getGamePlatforms, getPlatforms } from '../controllers/platforms';
 import { getGenres } from '../controllers/genre';
 
 module.exports = {
 	Game: {
-		platforms: getPlatforms,
+		platforms: getGamePlatforms,
 		genres: getGenres,
 	},
 	Query: {
 		searchGames,
+		platforms: getPlatforms,
 	},
 };

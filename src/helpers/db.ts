@@ -43,3 +43,5 @@ export const getPlatformsFromIds = (ids: string[]) =>
 
 export const getGenresFromIds = (ids: string[]) =>
 	Genre.findAll({ where: { id: ids } });
+
+export const getAllPlatforms = () => Platform.findAll();

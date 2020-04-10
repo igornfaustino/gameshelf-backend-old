@@ -19,11 +19,7 @@ module.exports = gql`
 		similarGames: [Game]
 	}
 	type Query {
-		searchGames(
-			search: String!
-			plataform: Int
-			limit: Int
-			offset: Int
-		): [Game]
+		searchGames(search: String!, platform: Int, limit: Int, offset: Int): [Game]
+		platforms: [Platform]
 	}
 `;
