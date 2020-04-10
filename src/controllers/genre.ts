@@ -1,10 +1,7 @@
-import { getGenresFromIds } from '../helpers/db';
+import { getGenresFromIds, getAllGenres } from '../helpers/db';
 
-export const getGenres = async (
-	_parents: Game,
-	args: any,
-	_context: any,
-	_info: any,
-) => {
+export const getGameGenres = async (_parents: Game) => {
 	return getGenresFromIds(_parents.genresId || []);
 };
+
+export const getGenres = () => getAllGenres();
