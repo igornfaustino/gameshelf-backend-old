@@ -18,9 +18,14 @@ module.exports = gql`
 		platforms: [Platform]
 		similarGames: [Game]
 	}
+	type List {
+		id: ID
+		name: String
+	}
 	type Query {
 		searchGames(search: String!, platform: Int, limit: Int, offset: Int): [Game]
 		platforms: [Platform]
 		genres: [Genre]
+		lists: [List]
 	}
 `;

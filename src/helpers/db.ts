@@ -3,6 +3,7 @@ import { APIGameData } from '../types/api';
 import { Platform } from '../database/models/platform';
 import { getPlatforms, getGenres } from './api';
 import { Genre } from '../database/models/genre';
+import { List } from '../database/models/list';
 
 const getPlatformIdsFromDatabase = async () =>
 	(await Platform.findAll()).map((platform) => platform.id);
@@ -47,3 +48,5 @@ export const getGenresFromIds = (ids: string[]) =>
 export const getAllPlatforms = () => Platform.findAll();
 
 export const getAllGenres = () => Genre.findAll();
+
+export const getAllLists = () => List.findAll();
