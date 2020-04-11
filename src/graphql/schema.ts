@@ -38,6 +38,7 @@ module.exports = gql`
 			limit: Int
 			offset: Int
 		): [Game]
+		getGamesFromList(listId: ID): [Game]
 		platforms: [Platform]
 		genres: [Genre]
 		lists: [List]

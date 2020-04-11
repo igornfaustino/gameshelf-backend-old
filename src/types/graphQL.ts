@@ -1,3 +1,5 @@
+import express from 'express';
+
 interface Platform {
 	id: string;
 	name: string;
@@ -9,7 +11,7 @@ interface Genres {
 	name: string;
 }
 
-interface Game {
+export interface Game {
 	id: string;
 	name: string;
 	coverURL?: string;
@@ -38,4 +40,8 @@ export interface UserArgs {
 export interface LoginArgs {
 	email: string;
 	password: string;
+}
+
+export interface Context {
+	req: express.Request;
 }
