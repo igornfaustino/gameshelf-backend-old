@@ -6,10 +6,20 @@ import { GamePlatform } from './models/gamePlatform';
 import { GameGenre } from './models/gameGenre';
 import { List } from './models/list';
 import { User } from './models/user';
+import { UserGameList } from './models/usergamelist';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config')[env];
-const models = [Game, Platform, Genre, GamePlatform, GameGenre, List, User];
+const models = [
+	Game,
+	Platform,
+	Genre,
+	GamePlatform,
+	GameGenre,
+	List,
+	User,
+	UserGameList,
+];
 
 let sequelize: Sequelize;
 sequelize = new Sequelize({
