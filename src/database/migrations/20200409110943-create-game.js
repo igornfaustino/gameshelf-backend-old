@@ -11,7 +11,7 @@ module.exports = {
 			name: {
 				type: Sequelize.STRING,
 			},
-			coverUrl: {
+			coverURL: {
 				type: Sequelize.STRING,
 			},
 			createdAt: {

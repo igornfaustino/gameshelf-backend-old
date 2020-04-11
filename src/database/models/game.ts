@@ -26,7 +26,7 @@ export class Game extends Model<Game> {
 	name!: string;
 
 	@Column
-	coverUrl!: string;
+	coverURL!: string;
 
 	@BelongsToMany(() => Platform, () => GamePlatform, 'gameId')
 	platforms!: Platform[];
