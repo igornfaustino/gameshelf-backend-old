@@ -1,6 +1,14 @@
 const { gql } = require('apollo-server-express');
 
 module.exports = gql`
+	type AuthPayload {
+		token: String
+		user: User
+	}
+	type User {
+		name: String!
+		email: String!
+	}
 	type Genre {
 		id: ID
 		name: String!
@@ -33,5 +41,9 @@ module.exports = gql`
 		platforms: [Platform]
 		genres: [Genre]
 		lists: [List]
+	}
+	type Mutation {
+		singUp(name: String!, email: String!, password: String!): AuthPayload!
+		login(email: String!, password: String!): AuthPayload!
 	}
 `;

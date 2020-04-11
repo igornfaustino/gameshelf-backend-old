@@ -1,4 +1,5 @@
-import { SearchArgs, APIGameData } from '../types/api';
+import { APIGameData } from '../types/api';
+import { SearchArgs } from '../types/graphQL';
 import { searchGameByName, getCovers } from '../helpers/api';
 import { saveGenresToDatabase, savePlatformsToDatabase } from '../helpers/db';
 import { joinGamesAndCovers, apiGameToGraphQLFormat } from '../helpers/commons';

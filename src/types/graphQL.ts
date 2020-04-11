@@ -20,3 +20,22 @@ interface Game {
 	similarGames?: Game[];
 	similarGamesId?: string[];
 }
+
+export interface SearchArgs {
+	search: string;
+	offset?: number;
+	limit?: number;
+	platforms?: number[];
+	genres?: number[];
+}
+
+export interface UserArgs {
+	name: string;
+	email: string;
+	password: string;
+}
+
+export interface LoginArgs {
+	email: string;
+	password: string;
+}
