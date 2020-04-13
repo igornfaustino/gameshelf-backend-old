@@ -4,11 +4,13 @@ import {
 	Model,
 	DataType,
 	BelongsToMany,
+	HasMany,
 } from 'sequelize-typescript';
 import { Platform } from './platform';
 import { GamePlatform } from './gamePlatform';
 import { Genre } from './genre';
 import { GameGenre } from './gameGenre';
+import { RelatedGame } from './relatedgame';
 
 @Table({
 	tableName: 'games',
@@ -33,4 +35,7 @@ export class Game extends Model<Game> {
 
 	@BelongsToMany(() => Genre, () => GameGenre, 'gameId')
 	genres!: Genre[];
+
+	@BelongsToMany(() => Game, () => RelatedGame, 'gameId')
+	relatedGames!: Game[];
 }

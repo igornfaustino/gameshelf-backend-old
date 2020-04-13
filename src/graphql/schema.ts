@@ -46,5 +46,14 @@ module.exports = gql`
 	type Mutation {
 		singUp(name: String!, email: String!, password: String!): AuthPayload!
 		login(email: String!, password: String!): AuthPayload!
+		addOrMoveGameToList(
+			id: ID!
+			listId: ID!
+			name: String
+			coverURL: String
+			genres: [ID]
+			platforms: [ID]
+			similarGames: [ID]
+		): Boolean
 	}
 `;
