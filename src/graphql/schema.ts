@@ -24,7 +24,7 @@ module.exports = gql`
 		coverURL: String
 		genres: [Genre]
 		platforms: [Platform]
-		similarGames: [Game]
+		similarGames: [ID]
 	}
 	type List {
 		id: ID

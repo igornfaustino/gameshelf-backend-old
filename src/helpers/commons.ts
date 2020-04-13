@@ -3,6 +3,7 @@ import {
 	APIGameDataWithCoverURL,
 	APICoverData,
 } from '../types/api';
+import { Game } from '../types/graphQL';
 
 export function binarySearch<T>(
 	list: T[],
@@ -48,7 +49,7 @@ export const apiGameToGraphQLFormat = (
 		id: game.id,
 		genresId: game.genres,
 		platformsId: game.platforms,
-		similarGamesId: game.similar_games,
+		similarGames: game.similar_games,
 		coverURL: game.cover?.toString(),
 	}));
 

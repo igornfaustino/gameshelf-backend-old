@@ -19,8 +19,7 @@ export interface Game {
 	genres?: Genres[];
 	platforms?: Platform[];
 	platformsId?: string[];
-	similarGames?: Game[];
-	similarGamesId?: string[];
+	similarGames?: string[];
 }
 
 export interface SearchArgs {
