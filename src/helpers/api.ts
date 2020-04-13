@@ -11,11 +11,6 @@ import { platform } from 'os';
 
 const client = igdb(process.env.IGDB_API_KEY);
 
-interface searchOption {
-	search: string;
-	limit?: number;
-	offset?: number;
-}
 export const searchGameByName = (
 	search: string,
 	genres: undefined | number[],
@@ -40,6 +35,13 @@ export const searchGameByName = (
 	}
 	return query.request('/games');
 };
+
+export const getGamesById = (gameIds: number[]) =>
+	client
+		.fields(['id', 'name', 'cover', 'genres', 'platforms'])
+		.limit(gameIds.length)
+		.where(`id = (${gameIds.join(',')})`)
+		.request('/games');
 
 export const getCovers = (
 	coversId: number[],

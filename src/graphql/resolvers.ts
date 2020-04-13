@@ -3,7 +3,7 @@ import { getGamePlatforms, getPlatforms } from '../controllers/platforms';
 import { getGameGenres, getGenres } from '../controllers/genre';
 import { getLists } from '../controllers/list';
 import { singUp, login } from '../controllers/user';
-import { getGamesFromList } from '../controllers/game';
+import { getGamesFromList, addOrMoveGameToList } from '../controllers/game';
 
 module.exports = {
 	Game: {
@@ -20,5 +20,6 @@ module.exports = {
 	Mutation: {
 		singUp,
 		login,
+		addOrMoveGameToList,
 	},
 };

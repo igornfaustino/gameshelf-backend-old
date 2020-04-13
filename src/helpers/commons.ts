@@ -27,7 +27,7 @@ export function binarySearch<T>(
 
 export const getUniquePlatformsId = (games: APIGameData[]) =>
 	new Set(
-		games.reduce<string[]>((platformsIds, game) => {
+		games.reduce<number[]>((platformsIds, game) => {
 			const gamePlatforms = game.platforms || [];
 			return [...platformsIds, ...gamePlatforms];
 		}, []),
@@ -35,7 +35,7 @@ export const getUniquePlatformsId = (games: APIGameData[]) =>
 
 export const getUniqueGenresId = (games: APIGameData[]) =>
 	new Set(
-		games.reduce<string[]>((genresIds, game) => {
+		games.reduce<number[]>((genresIds, game) => {
 			const gameGenres = game.genres || [];
 			return [...genresIds, ...gameGenres];
 		}, []),

@@ -2,18 +2,18 @@ export interface APIGameData {
 	name: string;
 	id: string;
 	cover?: number;
-	genres?: string[];
-	platforms?: string[];
-	similar_games: string[];
+	genres?: number[];
+	platforms?: number[];
+	similar_games: number[];
 }
 
 export interface APIGameDataWithCoverURL {
 	name: string;
 	id: string;
 	cover?: string;
-	genres?: string[];
-	platforms?: string[];
-	similar_games: string[];
+	genres?: number[];
+	platforms?: number[];
+	similar_games: number[];
 }
 
 export interface APICoverData {
@@ -30,4 +30,8 @@ export interface APIPlatformData {
 export interface APIGenreData {
 	name: string;
 	id: number;
+}
+
+export interface gamesAxiosResponse {
+	data: APIGameData[];
 }

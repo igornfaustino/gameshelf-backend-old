@@ -15,11 +15,11 @@ export interface Game {
 	id: string;
 	name: string;
 	coverURL?: string;
-	genresId?: string[];
+	genresId?: number[];
 	genres?: Genres[];
 	platforms?: Platform[];
-	platformsId?: string[];
-	similarGames?: string[];
+	platformsId?: number[];
+	similarGames?: number[];
 }
 
 export interface SearchArgs {
@@ -43,4 +43,14 @@ export interface LoginArgs {
 
 export interface Context {
 	req: express.Request;
+}
+
+export interface addOrMoveGameArgs {
+	gameId: number;
+	listId: number;
+	name: string;
+	coverURL: string;
+	genres: number[];
+	platforms: number[];
+	similarGames: number[];
 }

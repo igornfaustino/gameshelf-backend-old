@@ -47,13 +47,13 @@ module.exports = gql`
 		singUp(name: String!, email: String!, password: String!): AuthPayload!
 		login(email: String!, password: String!): AuthPayload!
 		addOrMoveGameToList(
-			id: ID!
+			gameId: ID!
 			listId: ID!
-			name: String
-			coverURL: String
-			genres: [ID]
-			platforms: [ID]
-			similarGames: [ID]
+			name: String!
+			coverURL: String!
+			genres: [ID]!
+			platforms: [ID]!
+			similarGames: [ID]!
 		): Boolean
 	}
 `;

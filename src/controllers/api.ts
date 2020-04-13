@@ -1,12 +1,8 @@
-import { APIGameData } from '../types/api';
+import { gamesAxiosResponse } from '../types/api';
 import { SearchArgs } from '../types/graphQL';
 import { searchGameByName, getCovers } from '../helpers/api';
 import { saveGenresToDatabase, savePlatformsToDatabase } from '../helpers/db';
 import { joinGamesAndCovers, apiGameToGraphQLFormat } from '../helpers/commons';
-
-interface gamesAxiosResponse {
-	data: APIGameData[];
-}
 
 export const searchGames = async (_parents: any, args: SearchArgs) => {
 	try {
