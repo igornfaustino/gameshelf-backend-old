@@ -6,6 +6,7 @@ import {
 	createOrUpdateGame,
 	addMissingRelatedGames,
 	addOrUpdateUserGameList,
+	removeGameFromUserListTable,
 } from '../helpers/db';
 
 export const getGamesFromList = async (
@@ -48,4 +49,13 @@ export const addOrMoveGameToList = async (
 	await addOrUpdateUserGameList(userId, game.id, listId);
 	await game.$set('relatedGames', similarGames);
 	return true;
+};
+
+export const removeGameFromList = async (
+	_parent: undefined,
+	{ gameId }: { gameId: number },
+	context: Context,
+) => {
+	const userId = parseInt(await getUserId(context));
+	return removeGameFromUserListTable(gameId, userId);
 };

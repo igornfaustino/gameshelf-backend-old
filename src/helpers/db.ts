@@ -122,3 +122,12 @@ export const addOrUpdateUserGameList = async (
 		listId,
 	});
 };
+
+export const removeGameFromUserListTable = async (
+	gameId: number,
+	userId: number,
+) => {
+	const listItem = await UserGameList.findOne({ where: { userId, gameId } });
+	if (listItem) await listItem.destroy();
+	return true;
+};

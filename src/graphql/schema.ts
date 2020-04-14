@@ -55,5 +55,6 @@ module.exports = gql`
 			platforms: [ID]!
 			similarGames: [ID]!
 		): Boolean
+		removeGameFromList(gameId: ID!): Boolean
 	}
 `;

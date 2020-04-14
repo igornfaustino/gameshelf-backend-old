@@ -3,7 +3,11 @@ import { getGamePlatforms, getPlatforms } from '../controllers/platforms';
 import { getGameGenres, getGenres } from '../controllers/genre';
 import { getLists } from '../controllers/list';
 import { singUp, login } from '../controllers/user';
-import { getGamesFromList, addOrMoveGameToList } from '../controllers/game';
+import {
+	getGamesFromList,
+	addOrMoveGameToList,
+	removeGameFromList,
+} from '../controllers/game';
 
 module.exports = {
 	Game: {
@@ -21,5 +25,6 @@ module.exports = {
 		singUp,
 		login,
 		addOrMoveGameToList,
+		removeGameFromList,
 	},
 };
