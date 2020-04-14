@@ -115,7 +115,7 @@ export const addOrUpdateUserGameList = async (
 	listId: number,
 ) => {
 	const listItem = await UserGameList.findOne({ where: { userId, gameId } });
-	if (listItem) return listItem.update({ listId });
+	if (listItem) return listItem.$set('list', listId);
 	return UserGameList.create({
 		userId,
 		gameId,

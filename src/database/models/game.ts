@@ -11,6 +11,7 @@ import { GamePlatform } from './gamePlatform';
 import { Genre } from './genre';
 import { GameGenre } from './gameGenre';
 import { RelatedGame } from './relatedgame';
+import { UserGameList } from './usergamelist';
 
 @Table({
 	tableName: 'games',
@@ -38,4 +39,7 @@ export class Game extends Model<Game> {
 
 	@BelongsToMany(() => Game, () => RelatedGame, 'gameId')
 	relatedGames!: Game[];
+
+	@HasMany(() => UserGameList, 'gameId')
+	userLists!: UserGameList[];
 }

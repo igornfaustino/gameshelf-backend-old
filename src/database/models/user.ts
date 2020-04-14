@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { UserGameList } from './usergamelist';
 
 @Table({
 	tableName: 'users',
@@ -22,4 +23,7 @@ export class User extends Model<User> {
 
 	@Column
 	password!: string;
+
+	@HasMany(() => UserGameList, 'userId')
+	userLists!: UserGameList[];
 }

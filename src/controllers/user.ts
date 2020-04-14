@@ -17,8 +17,6 @@ export const singUp = async (
 		password: encryptedPassword,
 	});
 
-	console.log(user);
-
 	const token = jwt.sign({ userId: user.id }, APP_SECRET!);
 	return {
 		token,

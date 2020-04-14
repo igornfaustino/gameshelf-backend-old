@@ -13,23 +13,23 @@ import { List } from './list';
 @Table
 export class UserGameList extends Model<UserGameList> {
 	@ForeignKey(() => User)
-	@Column({
-		primaryKey: true,
-	})
+	@Column
 	userId!: number;
 
 	@ForeignKey(() => Game)
-	@Column({
-		primaryKey: true,
-	})
+	@Column
 	gameId!: number;
 
 	@ForeignKey(() => List)
-	@Column({
-		primaryKey: true,
-	})
+	@Column
 	listId!: number;
 
 	@BelongsTo(() => Game)
 	game!: Game;
+
+	@BelongsTo(() => List, 'listId')
+	list!: List;
+
+	@BelongsTo(() => User)
+	user!: User;
 }

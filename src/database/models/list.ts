@@ -1,4 +1,5 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { UserGameList } from './usergamelist';
 
 @Table({
 	tableName: 'lists',
@@ -14,4 +15,7 @@ export class List extends Model<List> {
 
 	@Column
 	name!: string;
+
+	@HasMany(() => UserGameList, 'listId')
+	userLists!: UserGameList[];
 }

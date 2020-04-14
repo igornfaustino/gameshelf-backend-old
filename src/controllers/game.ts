@@ -8,12 +8,12 @@ import {
 	addOrUpdateUserGameList,
 } from '../helpers/db';
 
-export const getGamesFromList = (
+export const getGamesFromList = async (
 	_parents: undefined,
 	{ listId }: { listId: number },
 	context: Context,
 ) => {
-	const userId = getUserId(context);
+	const userId = await getUserId(context);
 	return UserGameList.findAll({
 		where: {
 			userId,
@@ -36,7 +36,7 @@ export const addOrMoveGameToList = async (
 	}: addOrMoveGameArgs,
 	context: Context,
 ) => {
-	const userId = parseInt(getUserId(context));
+	const userId = parseInt(await getUserId(context));
 	const game = await createOrUpdateGame(
 		gameId,
 		name,

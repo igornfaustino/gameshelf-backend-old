@@ -4,9 +4,14 @@ module.exports = {
 		return queryInterface.createTable(
 			'UserGameLists',
 			{
+				id: {
+					allowNull: false,
+					autoIncrement: true,
+					primaryKey: true,
+					type: Sequelize.INTEGER,
+				},
 				userId: {
 					type: Sequelize.INTEGER,
-					primaryKey: true,
 					references: {
 						key: 'id',
 						model: 'Users',
@@ -14,15 +19,13 @@ module.exports = {
 				},
 				gameId: {
 					type: Sequelize.INTEGER,
-					primaryKey: true,
 					references: {
 						key: 'id',
 						model: 'Games',
 					},
 				},
-				ListId: {
+				listId: {
 					type: Sequelize.INTEGER,
-					primaryKey: true,
 					references: {
 						key: 'id',
 						model: 'Lists',
