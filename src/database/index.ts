@@ -11,6 +11,7 @@ import { RelatedGame } from './models/relatedgame';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config')[env];
+
 const models = [
 	Game,
 	Platform,
@@ -24,10 +25,19 @@ const models = [
 ];
 
 let sequelize: Sequelize;
-sequelize = new Sequelize({
-	...config,
-	logging: false,
-	models,
-});
+if (env === 'production') {
+	const { url, sequelizeOptions } = config;
+	sequelize = new Sequelize(url, {
+		...sequelizeOptions,
+		logging: false,
+		models,
+	});
+} else {
+	sequelize = new Sequelize({
+		...config,
+		logging: true,
+		models,
+	});
+}
 
 export default sequelize;

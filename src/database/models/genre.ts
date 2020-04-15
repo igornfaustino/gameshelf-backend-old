@@ -8,9 +8,7 @@ import {
 import { Game } from './game';
 import { GameGenre } from './gameGenre';
 
-@Table({
-	tableName: 'genres',
-})
+@Table
 export class Genre extends Model<Genre> {
 	@Column({
 		allowNull: false,

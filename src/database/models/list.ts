@@ -1,9 +1,7 @@
 import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
 import { UserGameList } from './usergamelist';
 
-@Table({
-	tableName: 'lists',
-})
+@Table
 export class List extends Model<List> {
 	@Column({
 		allowNull: false,

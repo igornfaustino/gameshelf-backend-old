@@ -13,9 +13,7 @@ import { GameGenre } from './gameGenre';
 import { RelatedGame } from './relatedgame';
 import { UserGameList } from './usergamelist';
 
-@Table({
-	tableName: 'games',
-})
+@Table
 export class Game extends Model<Game> {
 	@Column({
 		allowNull: false,
