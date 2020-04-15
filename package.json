@@ -7,7 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"tsc": "tsc",
 		"dev": "ts-node-dev -r dotenv/config --respawn --transpileOnly ./src/app.ts",
-		"prod": "tsc && node ./build/app.js",
+		"start": "tsc && node ./build/app.js",
 		"sequelize:init": "npx sequelize-cli init"
 	},
 	"keywords": [],
