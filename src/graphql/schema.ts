@@ -30,6 +30,10 @@ module.exports = gql`
 		id: ID
 		name: String
 	}
+	type Search {
+		games: [Game]
+		count: Int
+	}
 	type Query {
 		searchGames(
 			search: String!
@@ -37,7 +41,7 @@ module.exports = gql`
 			genres: [Int]
 			limit: Int
 			offset: Int
-		): [Game]
+		): Search
 		getGamesFromList(listId: ID): [Game]
 		platforms: [Platform]
 		genres: [Genre]

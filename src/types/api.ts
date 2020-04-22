@@ -35,3 +35,9 @@ export interface APIGenreData {
 export interface gamesAxiosResponse {
 	data: APIGameData[];
 }
+
+export interface Count {
+	data: {
+		count: number;
+	};
+}

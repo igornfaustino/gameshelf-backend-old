@@ -23,17 +23,38 @@ export const searchGameByName = (
 		.limit(limit)
 		.offset(offset)
 		.search(search);
-	const whereStatement = [];
+	const whereStatement = ['cover!=null'];
 	if (genres) {
 		whereStatement.push(`genres=(${genres.join(',')})`);
 	}
 	if (platforms) {
 		whereStatement.push(`platforms=(${platforms.join(',')})`);
 	}
-	if (genres || platform) {
-		query.where(whereStatement.join('&'));
-	}
+	query.where(whereStatement.join('&'));
 	return query.request('/games');
+};
+
+export const countSearchGameByName = (
+	search: string,
+	genres: undefined | number[],
+	platforms: undefined | number[],
+	limit: number = 50,
+	offset: number = 0,
+) => {
+	let query = client
+		.fields(['id', 'name', 'cover', 'genres', 'platforms', 'similar_games'])
+		.limit(limit)
+		.offset(offset)
+		.search(search);
+	const whereStatement = ['cover!=null'];
+	if (genres) {
+		whereStatement.push(`genres=(${genres.join(',')})`);
+	}
+	if (platforms) {
+		whereStatement.push(`platforms=(${platforms.join(',')})`);
+	}
+	query.where(whereStatement.join('&'));
+	return query.request('/games/count');
 };
 
 export const getGamesById = (gameIds: number[]) =>
