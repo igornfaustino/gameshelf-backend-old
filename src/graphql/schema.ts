@@ -25,6 +25,7 @@ module.exports = gql`
 		genres: [Genre]
 		platforms: [Platform]
 		similarGames: [ID]
+		userList: String
 	}
 	type List {
 		id: ID

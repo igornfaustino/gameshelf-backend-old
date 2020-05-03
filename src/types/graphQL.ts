@@ -54,3 +54,8 @@ export interface addOrMoveGameArgs {
 	platforms: number[];
 	similarGames: number[];
 }
+
+export interface GameIdAndList {
+	gameId: number;
+	userList?: string;
+}

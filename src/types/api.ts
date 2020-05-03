@@ -5,6 +5,7 @@ export interface APIGameData {
 	genres?: number[];
 	platforms?: number[];
 	similar_games: number[];
+	userList?: string;
 }
 
 export interface APIGameDataWithCoverURL {
@@ -14,6 +15,17 @@ export interface APIGameDataWithCoverURL {
 	genres?: number[];
 	platforms?: number[];
 	similar_games: number[];
+	userList?: string;
+}
+
+export interface APIGameDataWithCoverURLAndList {
+	name: string;
+	id: string;
+	cover?: string;
+	genres?: number[];
+	platforms?: number[];
+	similar_games: number[];
+	userList?: string;
 }
 
 export interface APICoverData {

@@ -1,14 +1,27 @@
 import { gamesAxiosResponse, Count } from '../types/api';
-import { SearchArgs } from '../types/graphQL';
+import { SearchArgs, Context } from '../types/graphQL';
 import {
 	searchGameByName,
 	getCovers,
 	countSearchGameByName,
 } from '../helpers/api';
-import { saveGenresToDatabase, savePlatformsToDatabase } from '../helpers/db';
-import { joinGamesAndCovers, apiGameToGraphQLFormat } from '../helpers/commons';
+import {
+	saveGenresToDatabase,
+	savePlatformsToDatabase,
+	getAllListEntriesMatchedWithGames,
+} from '../helpers/db';
+import {
+	joinGamesAndCovers,
+	apiGameToGraphQLFormat,
+	joinGamesAndUserLists,
+} from '../helpers/commons';
+import { getUserId } from '../helpers/auth';
 
-export const searchGames = async (_parents: any, args: SearchArgs) => {
+export const searchGames = async (
+	_parents: any,
+	args: SearchArgs,
+	context: Context,
+) => {
 	try {
 		const searchRes: gamesAxiosResponse = await searchGameByName(
 			args.search,
@@ -32,10 +45,32 @@ export const searchGames = async (_parents: any, args: SearchArgs) => {
 
 		const covers = await getCovers(coversId);
 		const gamesWithCover = joinGamesAndCovers(games, covers);
-		return {
-			games: apiGameToGraphQLFormat(gamesWithCover),
-			count,
-		};
+
+		const gamesId = <number[]>games
+			.map(({ id }) => id)
+			.map((id) => parseInt(id))
+			.filter(Boolean);
+
+		try {
+			const userId = parseInt(await getUserId(context));
+			const gameIdAndList = await getAllListEntriesMatchedWithGames(
+				gamesId,
+				userId,
+			);
+			const gamesWithCoverAndList = joinGamesAndUserLists(
+				gamesWithCover,
+				gameIdAndList,
+			);
+			return {
+				games: apiGameToGraphQLFormat(gamesWithCoverAndList),
+				count,
+			};
+		} catch {
+			return {
+				games: apiGameToGraphQLFormat(gamesWithCover),
+				count,
+			};
+		}
 	} catch (error) {
 		throw error;
 	}

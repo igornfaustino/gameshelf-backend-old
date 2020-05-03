@@ -4,12 +4,12 @@ import {
 	joinGamesAndCovers,
 } from './commons';
 import { APIGameData, gamesAxiosResponse } from '../types/api';
+import { GameIdAndList } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { getPlatforms, getGenres, getGamesById, getCovers } from './api';
 import { Genre } from '../database/models/genre';
 import { List } from '../database/models/list';
 import { Game } from '../database/models/game';
-import { RelatedGame } from '../database/models/relatedgame';
 import { UserGameList } from '../database/models/usergamelist';
 
 const getPlatformIdsFromDatabase = async () =>
@@ -130,4 +130,25 @@ export const removeGameFromUserListTable = async (
 	const listItem = await UserGameList.findOne({ where: { userId, gameId } });
 	if (listItem) await listItem.destroy();
 	return true;
+};
+
+export const getAllListEntriesMatchedWithGames = async (
+	gamesId: number[],
+	userId: number,
+): Promise<GameIdAndList[]> => {
+	const listItems = await UserGameList.findAll({
+		where: { userId, gameId: gamesId },
+	});
+	const gameAndListPromises = listItems.map(
+		async (list): Promise<GameIdAndList | undefined> => {
+			const userList = await list.$get('list');
+			if (!userList) return undefined;
+			return {
+				gameId: list.gameId,
+				userList: userList.name,
+			};
+		},
+	);
+	const gameAndList = await Promise.all(gameAndListPromises);
+	return <GameIdAndList[]>gameAndList.filter(Boolean);
 };

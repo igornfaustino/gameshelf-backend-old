@@ -2,8 +2,10 @@ import {
 	APIGameData,
 	APIGameDataWithCoverURL,
 	APICoverData,
+	APIGameDataWithCoverURLAndList,
 } from '../types/api';
-import { Game } from '../types/graphQL';
+import { Game, GameIdAndList } from '../types/graphQL';
+import { getAllListEntriesMatchedWithGames } from './db';
 
 export function binarySearch<T>(
 	list: T[],
@@ -42,7 +44,11 @@ export const getUniqueGenresId = (games: APIGameData[]) =>
 	);
 
 export const apiGameToGraphQLFormat = (
-	games: (APIGameData | APIGameDataWithCoverURL)[],
+	games: (
+		| APIGameData
+		| APIGameDataWithCoverURL
+		| APIGameDataWithCoverURLAndList
+	)[],
 ): Game[] =>
 	games.map((game) => ({
 		name: game.name,
@@ -51,6 +57,7 @@ export const apiGameToGraphQLFormat = (
 		platformsId: game.platforms,
 		similarGames: game.similar_games,
 		coverURL: game.cover?.toString(),
+		userList: game.userList || undefined,
 	}));
 
 export const joinGamesAndCovers = (
@@ -77,6 +84,29 @@ export const joinGamesAndCovers = (
 		return {
 			...game,
 			cover: cover.url,
+		};
+	});
+};
+
+export const joinGamesAndUserLists = (
+	games: APIGameDataWithCoverURL[],
+	gameIdAndList: GameIdAndList[],
+): APIGameDataWithCoverURLAndList[] => {
+	return games.map((game) => {
+		const gameId = game.id;
+		const listItem = binarySearch<GameIdAndList>(
+			gameIdAndList,
+			parseInt(gameId),
+			(item) => item?.gameId,
+		);
+		if (!listItem)
+			return {
+				...game,
+				listName: undefined,
+			};
+		return {
+			...game,
+			userList: listItem.userList,
 		};
 	});
 };
