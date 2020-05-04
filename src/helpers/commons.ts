@@ -1,11 +1,9 @@
 import {
 	APIGameData,
-	APIGameDataWithCoverURL,
 	APICoverData,
-	APIGameDataWithCoverURLAndList,
+	APIGameDataExtraFields,
 } from '../types/api';
 import { Game, GameIdAndList } from '../types/graphQL';
-import { getAllListEntriesMatchedWithGames } from './db';
 
 export function binarySearch<T>(
 	list: T[],
@@ -44,11 +42,7 @@ export const getUniqueGenresId = (games: APIGameData[]) =>
 	);
 
 export const apiGameToGraphQLFormat = (
-	games: (
-		| APIGameData
-		| APIGameDataWithCoverURL
-		| APIGameDataWithCoverURLAndList
-	)[],
+	games: APIGameDataExtraFields[],
 ): Game[] =>
 	games.map((game) => ({
 		name: game.name,
@@ -63,9 +57,9 @@ export const apiGameToGraphQLFormat = (
 export const joinGamesAndCovers = (
 	games: APIGameData[],
 	covers: APICoverData[],
-): APIGameDataWithCoverURL[] => {
+): APIGameDataExtraFields[] => {
 	return games.map((game) => {
-		const coverId = game.cover;
+		const coverId = <number | undefined>game.cover;
 		if (!coverId)
 			return {
 				...game,
@@ -89,9 +83,9 @@ export const joinGamesAndCovers = (
 };
 
 export const joinGamesAndUserLists = (
-	games: APIGameDataWithCoverURL[],
+	games: APIGameData[],
 	gameIdAndList: GameIdAndList[],
-): APIGameDataWithCoverURLAndList[] => {
+): APIGameDataExtraFields[] => {
 	return games.map((game) => {
 		const gameId = game.id;
 		const listItem = binarySearch<GameIdAndList>(
@@ -99,14 +93,14 @@ export const joinGamesAndUserLists = (
 			parseInt(gameId),
 			(item) => item?.gameId,
 		);
-		if (!listItem)
-			return {
-				...game,
-				listName: undefined,
-			};
+		const { cover, ...gameProps } = game;
+
+		let listName = listItem?.userList;
+
 		return {
-			...game,
-			userList: listItem.userList,
+			...gameProps,
+			cover: <string | undefined>cover,
+			userList: listName,
 		};
 	});
 };

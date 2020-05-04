@@ -1,13 +1,5 @@
 import igdb from 'igdb-api-node';
-import {
-	APICoverData,
-	APIGameData,
-	APIGameDataWithCoverURL,
-	APIPlatformData,
-	APIGenreData,
-} from '../types/api';
-import { binarySearch } from './commons';
-import { platform } from 'os';
+import { APICoverData, APIPlatformData, APIGenreData } from '../types/api';
 
 const client = igdb(process.env.IGDB_API_KEY);
 

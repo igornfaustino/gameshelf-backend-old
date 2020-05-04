@@ -1,14 +1,13 @@
 export interface APIGameData {
 	name: string;
 	id: string;
-	cover?: number;
+	cover?: number | string;
 	genres?: number[];
 	platforms?: number[];
 	similar_games: number[];
-	userList?: string;
 }
 
-export interface APIGameDataWithCoverURL {
+export interface APIGameDataExtraFields {
 	name: string;
 	id: string;
 	cover?: string;
@@ -18,15 +17,15 @@ export interface APIGameDataWithCoverURL {
 	userList?: string;
 }
 
-export interface APIGameDataWithCoverURLAndList {
-	name: string;
-	id: string;
-	cover?: string;
-	genres?: number[];
-	platforms?: number[];
-	similar_games: number[];
-	userList?: string;
-}
+// export interface APIGameDataWithCoverURLAndList {
+// 	name: string;
+// 	id: string;
+// 	cover?: string;
+// 	genres?: number[];
+// 	platforms?: number[];
+// 	similar_games: number[];
+// 	userList?: string;
+// }
 
 export interface APICoverData {
 	url: string;
