@@ -150,5 +150,7 @@ export const getAllListEntriesMatchedWithGames = async (
 		},
 	);
 	const gameAndList = await Promise.all(gameAndListPromises);
-	return <GameIdAndList[]>gameAndList.filter(Boolean);
+	return <GameIdAndList[]>(
+		gameAndList.filter(Boolean).sort((a, b) => a!.gameId - b!.gameId)
+	);
 };

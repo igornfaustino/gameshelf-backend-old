@@ -46,10 +46,9 @@ export const searchGames = async (
 		const covers = await getCovers(coversId);
 		const gamesWithCover = joinGamesAndCovers(games, covers);
 
-		const gamesId = <number[]>games
-			.map(({ id }) => id)
-			.map((id) => parseInt(id))
-			.filter(Boolean);
+		const gamesId = <number[]>(
+			games.map(({ id }) => parseInt(id)).filter(Boolean)
+		);
 
 		try {
 			const userId = parseInt(await getUserId(context));
@@ -65,7 +64,7 @@ export const searchGames = async (
 				games: apiGameToGraphQLFormat(gamesWithCoverAndList),
 				count,
 			};
-		} catch {
+		} catch (ex) {
 			return {
 				games: apiGameToGraphQLFormat(gamesWithCover),
 				count,
