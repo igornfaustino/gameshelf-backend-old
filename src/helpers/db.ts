@@ -3,6 +3,7 @@ import {
 	getUniqueGenresId,
 	joinGamesAndCovers,
 } from './commons';
+import { Model } from 'sequelize-typescript';
 import { APIGameData, gamesAxiosResponse } from '../types/api';
 import { GameIdAndList } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
@@ -71,8 +72,9 @@ export const createOrUpdateGame = async (
 	} else {
 		game = await Game.create({ id: gameId, name, coverURL });
 	}
-	await game.$set('genres', genres);
-	await game.$set('platforms', platforms);
+	await safeSet(game, 'genres', genres);
+	await safeSet(game, 'platforms', platforms);
+
 	return game;
 };
 
@@ -85,28 +87,29 @@ export const addMissingRelatedGames = async (similarGames: number[]) => {
 		},
 		Promise.resolve([]),
 	);
-	if (missingSimilarGames.length > 0) {
-		const res: gamesAxiosResponse = await getGamesById(missingSimilarGames);
-		const relatedGames = res.data;
-		const coversId = <number[]>(
-			relatedGames.map(({ cover }) => cover).filter(Boolean)
-		);
-		await saveGenresToDatabase(relatedGames);
-		await savePlatformsToDatabase(relatedGames);
 
-		const covers = await getCovers(coversId);
-		const gamesWithCover = joinGamesAndCovers(relatedGames, covers);
-		gamesWithCover.map(
-			async (game) =>
-				await createOrUpdateGame(
-					parseInt(game.id),
-					game.name,
-					game.cover || '',
-					game.genres || [],
-					game.platforms || [],
-				),
-		);
-	}
+	if (!missingSimilarGames.length) return;
+
+	const res: gamesAxiosResponse = await getGamesById(missingSimilarGames);
+	const relatedGames = res.data;
+	const coversId = <number[]>(
+		relatedGames.map(({ cover }) => cover).filter(Boolean)
+	);
+	await saveGenresToDatabase(relatedGames);
+	await savePlatformsToDatabase(relatedGames);
+
+	const covers = await getCovers(coversId);
+	const gamesWithCover = joinGamesAndCovers(relatedGames, covers);
+	gamesWithCover.map(
+		async (game) =>
+			await createOrUpdateGame(
+				parseInt(game.id),
+				game.name,
+				game.cover || '',
+				game.genres || [],
+				game.platforms || [],
+			),
+	);
 };
 
 export const addOrUpdateUserGameList = async (
@@ -153,4 +156,9 @@ export const getAllListEntriesMatchedWithGames = async (
 	return <GameIdAndList[]>(
 		gameAndList.filter(Boolean).sort((a, b) => a!.gameId - b!.gameId)
 	);
+};
+
+export const safeSet = async (model: Model, set: any, values: any[]) => {
+	await model.$set(set, []);
+	await model.$set(set, values);
 };

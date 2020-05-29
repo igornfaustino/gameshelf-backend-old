@@ -7,6 +7,7 @@ import {
 	addMissingRelatedGames,
 	addOrUpdateUserGameList,
 	removeGameFromUserListTable,
+	safeSet,
 } from '../helpers/db';
 
 export const getGamesFromList = async (
@@ -47,7 +48,8 @@ export const addOrMoveGameToList = async (
 	);
 	await addMissingRelatedGames(similarGames);
 	await addOrUpdateUserGameList(userId, game.id, listId);
-	await game.$set('relatedGames', similarGames);
+	await safeSet(game, 'relatedGames', similarGames);
+
 	return true;
 };
 

@@ -43,7 +43,7 @@ export const searchGames = async (
 		await saveGenresToDatabase(games);
 		await savePlatformsToDatabase(games);
 
-		const covers = await getCovers(coversId);
+		const covers = coversId.length ? await getCovers(coversId) : [];
 		const gamesWithCover = joinGamesAndCovers(games, covers);
 
 		const gamesId = <number[]>(
