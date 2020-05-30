@@ -9,6 +9,7 @@ import {
 	removeGameFromUserListTable,
 	safeSet,
 } from '../helpers/db';
+import { Game as GameType } from '../types/graphQL';
 
 export const getGamesFromList = async (
 	_parents: undefined,
@@ -60,4 +61,10 @@ export const removeGameFromList = async (
 ) => {
 	const userId = parseInt(await getUserId(context));
 	return removeGameFromUserListTable(gameId, userId);
+};
+
+export const getSimilarGames = async (parents: Game | GameType) => {
+	if (parents instanceof Game)
+		return (await parents.$get('relatedGames')).map((game) => game.id);
+	return parents.similarGames;
 };

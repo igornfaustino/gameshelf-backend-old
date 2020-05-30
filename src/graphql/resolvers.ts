@@ -7,12 +7,14 @@ import {
 	getGamesFromList,
 	addOrMoveGameToList,
 	removeGameFromList,
+	getSimilarGames,
 } from '../controllers/game';
 
 module.exports = {
 	Game: {
 		platforms: getGamePlatforms,
 		genres: getGameGenres,
+		similarGames: getSimilarGames,
 	},
 	Query: {
 		searchGames,
