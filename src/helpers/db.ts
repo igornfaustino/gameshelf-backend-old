@@ -5,7 +5,7 @@ import {
 } from './commons';
 import { Model } from 'sequelize-typescript';
 import { APIGameData, gamesAxiosResponse } from '../types/api';
-import { GameIdAndList } from '../types/graphQL';
+import { GameIdAndList, List as ListType } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { getPlatforms, getGenres, getGamesById, getCovers } from './api';
 import { Genre } from '../database/models/genre';
@@ -57,7 +57,18 @@ export const getAllPlatforms = () => Platform.findAll();
 
 export const getAllGenres = () => Genre.findAll();
 
-export const getAllLists = () => List.findAll();
+export const getAllLists = async (userId: number) => {
+	const lists = await List.findAll();
+	return lists.map(async (list) => {
+		const count = await UserGameList.count({
+			where: { userId, listId: list.id },
+		});
+		return {
+			count,
+			list,
+		};
+	});
+};
 
 export const createOrUpdateGame = async (
 	gameId: number,
@@ -132,7 +143,7 @@ export const removeGameFromUserListTable = async (
 ) => {
 	const listItem = await UserGameList.findOne({ where: { userId, gameId } });
 	if (listItem) await listItem.destroy();
-	return true;
+	return Game.findOne({ where: { id: gameId } });
 };
 
 export const getAllListEntriesMatchedWithGames = async (
@@ -145,7 +156,7 @@ export const getAllListEntriesMatchedWithGames = async (
 	const gameAndListPromises = listItems.map(
 		async (list): Promise<GameIdAndList | undefined> => {
 			const userList = await list.$get('list');
-			if (!userList) return undefined;
+			if (!userList) return;
 			return {
 				gameId: list.gameId,
 				userList: userList.name,
@@ -156,6 +167,21 @@ export const getAllListEntriesMatchedWithGames = async (
 	return <GameIdAndList[]>(
 		gameAndList.filter(Boolean).sort((a, b) => a!.gameId - b!.gameId)
 	);
+};
+
+export const getOneListEntriesMatchedWithGames = async (
+	gameId: number,
+	userId: number,
+): Promise<ListType | undefined> => {
+	const listItems = await UserGameList.findOne({
+		where: { userId, gameId: gameId },
+	});
+
+	const userList = await listItems?.$get('list');
+	return {
+		id: userList?.id,
+		name: userList?.name,
+	};
 };
 
 export const safeSet = async (model: Model, set: any, values: any[]) => {

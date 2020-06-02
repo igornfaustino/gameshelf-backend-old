@@ -18,6 +18,10 @@ module.exports = gql`
 		name: String!
 		abbreviation: String
 	}
+	type List {
+		id: ID
+		name: String
+	}
 	type Game {
 		id: ID
 		name: String
@@ -25,14 +29,14 @@ module.exports = gql`
 		genres: [Genre]
 		platforms: [Platform]
 		similarGames: [ID]
-		userList: String
-	}
-	type List {
-		id: ID
-		name: String
+		list: List
 	}
 	type Search {
 		games: [Game]
+		count: Int
+	}
+	type ListAndCount {
+		list: List
 		count: Int
 	}
 	type Query {
@@ -46,7 +50,7 @@ module.exports = gql`
 		getGamesFromList(listId: ID): [Game]
 		platforms: [Platform]
 		genres: [Genre]
-		lists: [List]
+		lists: [ListAndCount]
 	}
 	type Mutation {
 		singUp(name: String!, email: String!, password: String!): AuthPayload!
@@ -59,7 +63,7 @@ module.exports = gql`
 			genres: [ID]!
 			platforms: [ID]!
 			similarGames: [ID]!
-		): Boolean
-		removeGameFromList(gameId: ID!): Boolean
+		): Game
+		removeGameFromList(gameId: ID!): Game
 	}
 `;

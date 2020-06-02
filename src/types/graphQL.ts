@@ -20,6 +20,7 @@ export interface Game {
 	platforms?: Platform[];
 	platformsId?: number[];
 	similarGames?: number[];
+	userList?: string;
 }
 
 export interface SearchArgs {
@@ -58,4 +59,9 @@ export interface addOrMoveGameArgs {
 export interface GameIdAndList {
 	gameId: number;
 	userList?: string;
+}
+
+export interface List {
+	id?: number;
+	name?: string;
 }

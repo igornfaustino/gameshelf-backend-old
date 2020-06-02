@@ -8,6 +8,7 @@ import {
 	addOrUpdateUserGameList,
 	removeGameFromUserListTable,
 	safeSet,
+	getOneListEntriesMatchedWithGames,
 } from '../helpers/db';
 import { Game as GameType } from '../types/graphQL';
 
@@ -51,7 +52,7 @@ export const addOrMoveGameToList = async (
 	await addOrUpdateUserGameList(userId, game.id, listId);
 	await safeSet(game, 'relatedGames', similarGames);
 
-	return true;
+	return game;
 };
 
 export const removeGameFromList = async (
@@ -67,4 +68,13 @@ export const getSimilarGames = async (parents: Game | GameType) => {
 	if (parents instanceof Game)
 		return (await parents.$get('relatedGames')).map((game) => game.id);
 	return parents.similarGames;
+};
+
+export const getGameList = async (
+	parents: Game | GameType,
+	_: any,
+	context: Context,
+) => {
+	const userId = await getUserId(context);
+	return getOneListEntriesMatchedWithGames(Number(parents.id), Number(userId));
 };
