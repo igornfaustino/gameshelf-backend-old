@@ -38,7 +38,7 @@ export const countSearchGameByName = (
 		.limit(limit)
 		.offset(offset)
 		.search(search);
-	const whereStatement = [];
+	const whereStatement = ['cover!=null'];
 	if (genres) {
 		whereStatement.push(`genres=(${genres.join(',')})`);
 	}
