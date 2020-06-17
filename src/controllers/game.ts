@@ -11,20 +11,86 @@ import {
 	getOneListEntriesMatchedWithGames,
 } from '../helpers/db';
 import { Game as GameType } from '../types/graphQL';
+import { Platform } from '../database/models/platform';
+import { Genre } from '../database/models/genre';
+import { platform } from 'process';
 
-export const getGamesFromList = async (
-	_parents: undefined,
-	{ listId }: { listId: number },
-	context: Context,
+const getQueryToGetGamesList = (
+	platforms: number[],
+	genres: number[],
+	userId: number,
+	listId: number,
 ) => {
-	const userId = await getUserId(context);
-	return UserGameList.findAll({
+	const includes = [];
+	if (platforms && platforms.length) {
+		includes.push({
+			model: Platform,
+			where: {
+				id: platforms,
+			},
+			required: true,
+		});
+	}
+	if (genres && genres.length) {
+		includes.push({
+			model: Genre,
+			where: {
+				id: genres,
+			},
+			required: true,
+		});
+	}
+	return {
+		include: [
+			{
+				model: Game,
+				include: includes,
+				required: true,
+			},
+		],
 		where: {
 			userId,
 			listId,
 		},
-		include: [Game],
-	}).then((value) => value.map((userGame) => userGame.game));
+	};
+};
+
+export const getGamesFromList = async (
+	_parents: undefined,
+	{
+		listId,
+		platforms,
+		genres,
+		limit,
+		offset,
+	}: {
+		listId: number;
+		platforms: number[];
+		genres: number[];
+		limit: number;
+		offset: number;
+	},
+	context: Context,
+) => {
+	const userId = await getUserId(context);
+	const query = getQueryToGetGamesList(
+		platforms,
+		genres,
+		Number(userId),
+		listId,
+	);
+	const count = await UserGameList.count(query);
+	return UserGameList.findAll({
+		...query,
+		limit,
+		offset,
+	}).then((value) => {
+		console.log(value);
+		return {
+			games: value.map((userGame) => userGame.game),
+			count,
+		};
+	});
 };
 
 export const addOrMoveGameToList = async (
