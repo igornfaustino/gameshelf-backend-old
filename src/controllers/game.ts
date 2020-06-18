@@ -13,7 +13,6 @@ import {
 import { Game as GameType } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { Genre } from '../database/models/genre';
-import { platform } from 'process';
 
 const getQueryToGetGamesList = (
 	platforms: number[],
@@ -82,10 +81,10 @@ export const getGamesFromList = async (
 	const count = await UserGameList.count(query);
 	return UserGameList.findAll({
 		...query,
+		order: ['gameId'],
 		limit,
 		offset,
 	}).then((value) => {
-		console.log(value);
 		return {
 			games: value.map((userGame) => userGame.game),
 			count,
