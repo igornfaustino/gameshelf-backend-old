@@ -1,0 +1,13 @@
+version: '2.0'
+services:
+  server:
+    image: node:12.18.3
+    ports:
+      - '4000:4000'
+    environment:
+      - PORT=4000
+      - NODE_ENV=development
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    command: 'npm run dev'
