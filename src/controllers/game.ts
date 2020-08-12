@@ -14,6 +14,8 @@ import { Game as GameType } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { Genre } from '../database/models/genre';
 
+const EMPTY: never[] = [];
+
 const getQueryToGetGamesList = (
 	platforms: number[],
 	genres: number[],
@@ -140,6 +142,13 @@ export const getGameList = async (
 	_: any,
 	context: Context,
 ) => {
-	const userId = await getUserId(context);
-	return getOneListEntriesMatchedWithGames(Number(parents.id), Number(userId));
+	try {
+		const userId = await getUserId(context);
+		return getOneListEntriesMatchedWithGames(
+			Number(parents.id),
+			Number(userId),
+		);
+	} catch {
+		return EMPTY;
+	}
 };

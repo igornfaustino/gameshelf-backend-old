@@ -65,12 +65,14 @@ export const searchGames = async (
 				count,
 			};
 		} catch (ex) {
+			console.log({ ex });
 			return {
 				games: apiGameToGraphQLFormat(gamesWithCover),
 				count,
 			};
 		}
 	} catch (error) {
+		console.log(error);
 		throw error;
 	}
 };
