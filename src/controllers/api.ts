@@ -1,4 +1,9 @@
-import { gamesAxiosResponse, Count } from '../types/api';
+import {
+	gamesAxiosResponse,
+	Count,
+	APIGameDataExtraFields,
+	APIGameData,
+} from '../types/api';
 import { SearchArgs, Context } from '../types/graphQL';
 import {
 	searchGameByName,
@@ -17,62 +22,81 @@ import {
 } from '../helpers/commons';
 import { getUserId } from '../helpers/auth';
 
+const getGamesOnGraphQlFormatWihOrWithoutUserLists = async (
+	context: Context,
+	games: APIGameDataExtraFields[],
+) => {
+	try {
+		const gamesId = <number[]>(
+			games.map(({ id }) => parseInt(id)).filter(Boolean)
+		);
+		const userId = parseInt(await getUserId(context));
+		const gameIdAndList = await getAllListEntriesMatchedWithGames(
+			gamesId,
+			userId,
+		);
+		const gamesWithCoverAndList = joinGamesAndUserLists(games, gameIdAndList);
+		return apiGameToGraphQLFormat(gamesWithCoverAndList);
+	} catch {
+		return apiGameToGraphQLFormat(games);
+	}
+};
+
+const getGamesFromAPI = async (args: SearchArgs) => {
+	const res: gamesAxiosResponse = await searchGameByName(
+		args.search,
+		args.genres,
+		args.platforms,
+		args.limit,
+		args.offset,
+	);
+	return res.data;
+};
+
+const getTotalOfGamesFromAPI = async (args: SearchArgs) => {
+	const res: Count = await countSearchGameByName(
+		args.search,
+		args.genres,
+		args.platforms,
+		args.limit,
+		args.offset,
+	);
+	return res.data.count;
+};
+
 export const searchGames = async (
 	_parents: any,
 	args: SearchArgs,
 	context: Context,
 ) => {
 	try {
-		const searchRes: gamesAxiosResponse = await searchGameByName(
-			args.search,
-			args.genres,
-			args.platforms,
-			args.limit,
-			args.offset,
-		);
-		const countRes: Count = await countSearchGameByName(
-			args.search,
-			args.genres,
-			args.platforms,
-			args.limit,
-			args.offset,
-		);
-		const count = countRes.data.count;
-		const games = searchRes.data;
-		const coversId = <number[]>games.map(({ cover }) => cover).filter(Boolean);
-		await saveGenresToDatabase(games);
-		await savePlatformsToDatabase(games);
+		const games = await getGamesFromAPI(args);
+		const totalOfGames = await getTotalOfGamesFromAPI(args);
 
-		const covers = coversId.length ? await getCovers(coversId) : [];
-		const gamesWithCover = joinGamesAndCovers(games, covers);
+		await saveNewGenresAndPlatformsToDatabase(games);
 
-		const gamesId = <number[]>(
-			games.map(({ id }) => parseInt(id)).filter(Boolean)
+		const gamesWithCover = await searchCoversAndJoinWithGames(games);
+		const gamesOnGraphQlFormat = await getGamesOnGraphQlFormatWihOrWithoutUserLists(
+			context,
+			gamesWithCover,
 		);
-
-		try {
-			const userId = parseInt(await getUserId(context));
-			const gameIdAndList = await getAllListEntriesMatchedWithGames(
-				gamesId,
-				userId,
-			);
-			const gamesWithCoverAndList = joinGamesAndUserLists(
-				gamesWithCover,
-				gameIdAndList,
-			);
-			return {
-				games: apiGameToGraphQLFormat(gamesWithCoverAndList),
-				count,
-			};
-		} catch (ex) {
-			console.log({ ex });
-			return {
-				games: apiGameToGraphQLFormat(gamesWithCover),
-				count,
-			};
-		}
+		return {
+			games: gamesOnGraphQlFormat,
+			count: totalOfGames,
+		};
 	} catch (error) {
-		console.log(error);
 		throw error;
 	}
 };
+
+async function searchCoversAndJoinWithGames(games: APIGameData[]) {
+	const coversId = <number[]>games.map(({ cover }) => cover).filter(Boolean);
+	const covers = coversId.length ? await getCovers(coversId) : [];
+	const gamesWithCover = joinGamesAndCovers(games, covers);
+	return gamesWithCover;
+}
+
+async function saveNewGenresAndPlatformsToDatabase(games: APIGameData[]) {
+	await saveGenresToDatabase(games);
+	await savePlatformsToDatabase(games);
+}
