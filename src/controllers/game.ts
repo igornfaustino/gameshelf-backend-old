@@ -1,5 +1,5 @@
 import { UserGameList } from '../database/models/usergamelist';
-import { Context, addOrMoveGameArgs } from '../types/graphQL';
+import { Context, addOrMoveGameArgs, GameAndList } from '../types/graphQL';
 import { getUserId } from '../helpers/auth';
 import { Game } from '../database/models/game';
 import {
@@ -12,6 +12,7 @@ import {
 import { GameSimplified as GameType } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { Genre } from '../database/models/genre';
+import { dbGameToGraphQLFormat } from '../helpers/commons';
 
 const EMPTY: never[] = [];
 
@@ -108,7 +109,7 @@ export const addOrMoveGameToList = async (
 	);
 	await addOrUpdateUserGameList(userId, game.id, listId);
 
-	return game;
+	return dbGameToGraphQLFormat(game);
 };
 
 export const removeGameFromList = async (

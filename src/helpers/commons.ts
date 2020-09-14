@@ -1,11 +1,11 @@
 import {
 	APISimpleGameData,
-	APICoverData,
 	APIGenreData,
 	APIPlatformData,
 	APIGenericData,
 } from '../types/api';
-import { Genre, Platform, GameAndList } from '../types/graphQL';
+import { GameAndList } from '../types/graphQL';
+import { Game } from '../database/models/game';
 
 export function binarySearch<T>(
 	list: T[],
@@ -64,3 +64,16 @@ export const apiGameToGraphQLFormat = (
 			coverURL: game.cover.url.slice(2).replace('t_thumb', 't_cover_big'),
 		},
 	}));
+
+export const dbGameToGraphQLFormat = async (
+	game: Game,
+): Promise<GameAndList> => ({
+	id: game.id,
+	gameInfo: {
+		id: game.id,
+		name: game.name,
+		genres: await game.$get('genres'),
+		platforms: await game.$get('platforms'),
+		coverURL: game.coverURL,
+	},
+});
