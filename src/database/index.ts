@@ -7,7 +7,6 @@ import { GameGenre } from './models/gameGenre';
 import { List } from './models/list';
 import { User } from './models/user';
 import { UserGameList } from './models/usergamelist';
-import { RelatedGame } from './models/relatedgame';
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config')[env];
@@ -21,7 +20,6 @@ const models = [
 	List,
 	User,
 	UserGameList,
-	RelatedGame,
 ];
 
 let sequelize: Sequelize;

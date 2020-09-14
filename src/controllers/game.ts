@@ -4,13 +4,12 @@ import { getUserId } from '../helpers/auth';
 import { Game } from '../database/models/game';
 import {
 	createOrUpdateGame,
-	addMissingRelatedGames,
 	addOrUpdateUserGameList,
 	removeGameFromUserListTable,
 	safeSet,
 	getOneListEntriesMatchedWithGames,
 } from '../helpers/db';
-import { Game as GameType } from '../types/graphQL';
+import { GameSimplified as GameType } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { Genre } from '../database/models/genre';
 
@@ -96,15 +95,7 @@ export const getGamesFromList = async (
 
 export const addOrMoveGameToList = async (
 	_parent: undefined,
-	{
-		gameId,
-		listId,
-		name,
-		coverURL,
-		genres,
-		platforms,
-		similarGames,
-	}: addOrMoveGameArgs,
+	{ gameId, listId, name, coverURL, genres, platforms }: addOrMoveGameArgs,
 	context: Context,
 ) => {
 	const userId = parseInt(await getUserId(context));
@@ -115,9 +106,7 @@ export const addOrMoveGameToList = async (
 		genres,
 		platforms,
 	);
-	await addMissingRelatedGames(similarGames);
 	await addOrUpdateUserGameList(userId, game.id, listId);
-	await safeSet(game, 'relatedGames', similarGames);
 
 	return game;
 };
@@ -129,12 +118,6 @@ export const removeGameFromList = async (
 ) => {
 	const userId = parseInt(await getUserId(context));
 	return removeGameFromUserListTable(gameId, userId);
-};
-
-export const getSimilarGames = async (parents: Game | GameType) => {
-	if (parents instanceof Game)
-		return (await parents.$get('relatedGames')).map((game) => game.id);
-	return parents.similarGames;
 };
 
 export const getGameList = async (

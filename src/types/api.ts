@@ -1,31 +1,6 @@
-export interface APIGameData {
-	name: string;
-	id: string;
-	cover?: number | string;
-	genres?: number[];
-	platforms?: number[];
-	similar_games: number[];
+export interface APIGenericData {
+	id: number;
 }
-
-export interface APIGameDataExtraFields {
-	name: string;
-	id: string;
-	cover?: string;
-	genres?: number[];
-	platforms?: number[];
-	similar_games: number[];
-	userList?: string;
-}
-
-// export interface APIGameDataWithCoverURLAndList {
-// 	name: string;
-// 	id: string;
-// 	cover?: string;
-// 	genres?: number[];
-// 	platforms?: number[];
-// 	similar_games: number[];
-// 	userList?: string;
-// }
 
 export interface APICoverData {
 	url: string;
@@ -43,8 +18,16 @@ export interface APIGenreData {
 	id: number;
 }
 
+export interface APISimpleGameData {
+	name: string;
+	id: number;
+	cover: APICoverData;
+	genres: APIGenreData[];
+	platforms?: APIPlatformData[];
+}
+
 export interface gamesAxiosResponse {
-	data: APIGameData[];
+	data: APISimpleGameData[];
 }
 
 export interface Count {

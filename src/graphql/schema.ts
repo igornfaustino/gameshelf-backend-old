@@ -22,17 +22,20 @@ module.exports = gql`
 		id: ID
 		name: String
 	}
-	type Game {
+	type GameSimplifiedFromAPI {
 		id: ID
 		name: String
 		coverURL: String
 		genres: [Genre]
 		platforms: [Platform]
-		similarGames: [ID]
+	}
+	type GameAndList {
+		id: ID
+		gameInfo: GameSimplifiedFromAPI
 		list: List
 	}
 	type Search {
-		games: [Game]
+		gamesAndList: [GameAndList]
 		count: Int
 	}
 	type ListAndCount {
@@ -68,8 +71,7 @@ module.exports = gql`
 			coverURL: String!
 			genres: [ID]!
 			platforms: [ID]!
-			similarGames: [ID]!
-		): Game
-		removeGameFromList(gameId: ID!): Game
+		): GameAndList
+		# removeGameFromList(gameId: ID!): Game
 	}
 `;

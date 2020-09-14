@@ -1,9 +1,11 @@
 import {
-	APIGameData,
+	APISimpleGameData,
 	APICoverData,
-	APIGameDataExtraFields,
+	APIGenreData,
+	APIPlatformData,
+	APIGenericData,
 } from '../types/api';
-import { Game, GameIdAndList } from '../types/graphQL';
+import { Genre, Platform, GameAndList } from '../types/graphQL';
 
 export function binarySearch<T>(
 	list: T[],
@@ -25,82 +27,40 @@ export function binarySearch<T>(
 	}
 }
 
-export const getUniquePlatformsId = (games: APIGameData[]) =>
-	new Set(
-		games.reduce<number[]>((platformsIds, game) => {
-			const gamePlatforms = game.platforms || [];
-			return [...platformsIds, ...gamePlatforms];
-		}, []),
-	);
+const filterRepeatedAPIObjects = (
+	object: APIGenericData,
+	index: number,
+	self: APIGenericData[],
+) => index === self.findIndex((_object) => _object.id === object.id);
 
-export const getUniqueGenresId = (games: APIGameData[]) =>
-	new Set(
-		games.reduce<number[]>((genresIds, game) => {
-			const gameGenres = game.genres || [];
-			return [...genresIds, ...gameGenres];
-		}, []),
-	);
+export const getUniquePlatforms = (games: APISimpleGameData[]) => {
+	const platforms = games.reduce<APIPlatformData[]>((platformsIds, game) => {
+		const gamePlatforms = game.platforms || [];
+		return [...platformsIds, ...gamePlatforms];
+	}, []);
+	const uniquePlatforms = platforms.filter(filterRepeatedAPIObjects);
+	return uniquePlatforms;
+};
+
+export const getUniqueGenres = (games: APISimpleGameData[]) => {
+	const genres = games.reduce<APIGenreData[]>((genresIds, game) => {
+		const gameGenres = game.genres || [];
+		return [...genresIds, ...gameGenres];
+	}, []);
+	const uniqueGenres = genres.filter(filterRepeatedAPIObjects);
+	return uniqueGenres;
+};
 
 export const apiGameToGraphQLFormat = (
-	games: APIGameDataExtraFields[],
-): Game[] =>
+	games: APISimpleGameData[],
+): GameAndList[] =>
 	games.map((game) => ({
-		name: game.name,
 		id: game.id,
-		genresId: game.genres,
-		platformsId: game.platforms,
-		similarGames: game.similar_games,
-		coverURL: game.cover?.toString(),
-		userList: game.userList || undefined,
+		gameInfo: {
+			id: game.id,
+			name: game.name,
+			genres: game.genres,
+			platforms: game.platforms,
+			coverURL: game.cover.url.slice(2).replace('t_thumb', 't_cover_big'),
+		},
 	}));
-
-export const joinGamesAndCovers = (
-	games: APIGameData[],
-	covers: APICoverData[],
-): APIGameDataExtraFields[] => {
-	return games.map((game) => {
-		const coverId = <number | undefined>game.cover;
-		if (!coverId)
-			return {
-				...game,
-				cover: undefined,
-			};
-		const cover = binarySearch<APICoverData>(
-			covers,
-			coverId,
-			(cover) => cover?.id,
-		);
-		if (!cover)
-			return {
-				...game,
-				cover: undefined,
-			};
-		return {
-			...game,
-			cover: cover.url,
-		};
-	});
-};
-
-export const joinGamesAndUserLists = (
-	games: APIGameData[],
-	gameIdAndList: GameIdAndList[],
-): APIGameDataExtraFields[] => {
-	return games.map((game) => {
-		const gameId = game.id;
-		const listItem = binarySearch<GameIdAndList>(
-			gameIdAndList,
-			parseInt(gameId),
-			(item) => item?.gameId,
-		);
-		const { cover, ...gameProps } = game;
-
-		let listName = listItem?.userList;
-
-		return {
-			...gameProps,
-			cover: <string | undefined>cover,
-			userList: listName,
-		};
-	});
-};

@@ -11,7 +11,14 @@ export const searchGameByName = (
 	offset: number = 0,
 ) => {
 	let query = client
-		.fields(['id', 'name', 'cover', 'genres', 'platforms', 'similar_games'])
+		.fields([
+			'id',
+			'name',
+			'cover.url',
+			'genres.name',
+			'platforms.name',
+			'platforms.abbreviation',
+		])
 		.limit(limit)
 		.offset(offset)
 		.search(search);
@@ -33,11 +40,7 @@ export const countSearchGameByName = (
 	limit: number = 50,
 	offset: number = 0,
 ) => {
-	let query = client
-		.fields(['id', 'name', 'cover', 'genres', 'platforms', 'similar_games'])
-		.limit(limit)
-		.offset(offset)
-		.search(search);
+	let query = client.fields(['id']).limit(limit).offset(offset).search(search);
 	const whereStatement = ['cover!=null'];
 	if (genres) {
 		whereStatement.push(`genres=(${genres.join(',')})`);
@@ -55,52 +58,3 @@ export const getGamesById = (gameIds: number[]) =>
 		.limit(gameIds.length)
 		.where(`id = (${gameIds.join(',')})`)
 		.request('/games');
-
-export const getCovers = (
-	coversId: number[],
-	limit: number = 50,
-	offset: number = 0,
-) =>
-	client
-		.fields(['id', 'url'])
-		.limit(limit)
-		.offset(offset)
-		.where(`id = (${coversId.join(',')})`)
-		.request('/covers')
-		.then((res: { data: APICoverData[] }) => {
-			return res.data
-				.map((cover) => ({
-					...cover,
-					url: cover.url.slice(2).replace('t_thumb', 't_cover_big'),
-				}))
-				.sort((a, b) => a.id - b.id);
-		})
-		.catch((ex) => {
-			throw ex;
-		});
-
-export const getGenres = (platformsId: number[], limit: number = 50) =>
-	client
-		.fields(['id', 'name'])
-		.limit(limit)
-		.where(`id = (${platformsId.join(',')})`)
-		.request('/genres')
-		.then((res: { data: APIGenreData[] }) => {
-			return res.data;
-		})
-		.catch((ex) => {
-			throw ex;
-		});
-
-export const getPlatforms = (platformsId: number[], limit: number = 50) =>
-	client
-		.fields(['id', 'name', 'abbreviation'])
-		.limit(limit)
-		.where(`id = (${platformsId.join(',')})`)
-		.request('/platforms')
-		.then((res: { data: APIPlatformData[] }) => {
-			return res.data;
-		})
-		.catch((ex) => {
-			throw ex;
-		});

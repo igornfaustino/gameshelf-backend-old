@@ -1,26 +1,28 @@
 import express from 'express';
 
-interface Platform {
-	id: string;
+export interface Platform {
+	id: number;
 	name: string;
 	abbreviation?: string;
 }
 
-interface Genres {
-	id: string;
+export interface Genre {
+	id: number;
 	name: string;
 }
 
-export interface Game {
-	id: string;
+export interface GameAndList {
+	id: number;
+	list?: List;
+	gameInfo: GameSimplified;
+}
+
+export interface GameSimplified {
+	id: number;
 	name: string;
 	coverURL?: string;
-	genresId?: number[];
-	genres?: Genres[];
+	genres?: Genre[];
 	platforms?: Platform[];
-	platformsId?: number[];
-	similarGames?: number[];
-	userList?: string;
 }
 
 export interface SearchArgs {

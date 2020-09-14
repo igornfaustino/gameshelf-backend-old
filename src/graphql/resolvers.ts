@@ -1,21 +1,17 @@
-import { searchGames } from '../controllers/api';
-import { getGamePlatforms, getPlatforms } from '../controllers/platforms';
-import { getGameGenres, getGenres } from '../controllers/genre';
+import { searchGames } from '../controllers/igdb';
+import { getPlatforms } from '../controllers/platforms';
+import { getGenres } from '../controllers/genre';
 import { getLists } from '../controllers/list';
 import { singUp, login } from '../controllers/user';
 import {
 	getGamesFromList,
 	addOrMoveGameToList,
 	removeGameFromList,
-	getSimilarGames,
 	getGameList,
 } from '../controllers/game';
 
 module.exports = {
-	Game: {
-		platforms: getGamePlatforms,
-		genres: getGameGenres,
-		similarGames: getSimilarGames,
+	GameAndList: {
 		list: getGameList,
 	},
 	Query: {
@@ -29,6 +25,6 @@ module.exports = {
 		singUp,
 		login,
 		addOrMoveGameToList,
-		removeGameFromList,
+		// removeGameFromList,
 	},
 };
