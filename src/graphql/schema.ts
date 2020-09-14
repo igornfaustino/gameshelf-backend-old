@@ -72,6 +72,6 @@ module.exports = gql`
 			genres: [ID]!
 			platforms: [ID]!
 		): GameAndList
-		# removeGameFromList(gameId: ID!): Game
+		removeGameFromList(gameId: ID!): GameAndList
 	}
 `;

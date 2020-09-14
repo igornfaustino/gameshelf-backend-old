@@ -25,6 +25,6 @@ module.exports = {
 		singUp,
 		login,
 		addOrMoveGameToList,
-		// removeGameFromList,
+		removeGameFromList,
 	},
 };

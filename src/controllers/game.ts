@@ -118,7 +118,8 @@ export const removeGameFromList = async (
 	context: Context,
 ) => {
 	const userId = parseInt(await getUserId(context));
-	return removeGameFromUserListTable(gameId, userId);
+	const game = await removeGameFromUserListTable(gameId, userId);
+	return game ? dbGameToGraphQLFormat(game) : null;
 };
 
 export const getGameList = async (
