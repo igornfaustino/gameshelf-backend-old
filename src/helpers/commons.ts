@@ -77,3 +77,17 @@ export const dbGameToGraphQLFormat = async (
 		coverURL: game.coverURL,
 	},
 });
+
+export const dbGameListToGraphQLFormat = (games: Game[]) =>
+	Promise.all(
+		games.map(async (game) => ({
+			id: game.id,
+			gameInfo: {
+				id: game.id,
+				name: game.name,
+				genres: await game.$get('genres'),
+				platforms: await game.$get('platforms'),
+				coverURL: game.coverURL,
+			},
+		})),
+	);

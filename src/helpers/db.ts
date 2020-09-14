@@ -34,12 +34,6 @@ export const saveGenresToDatabase = async (games: APISimpleGameData[]) => {
 	await Genre.bulkCreate(genresMissingInDatabase);
 };
 
-export const getPlatformsFromIds = (ids: number[]) =>
-	Platform.findAll({ where: { id: ids } });
-
-export const getGenresFromIds = (ids: number[]) =>
-	Genre.findAll({ where: { id: ids } });
-
 export const getAllPlatforms = () => Platform.findAll();
 
 export const getAllGenres = () => Genre.findAll();

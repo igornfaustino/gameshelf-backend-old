@@ -6,13 +6,16 @@ import {
 	createOrUpdateGame,
 	addOrUpdateUserGameList,
 	removeGameFromUserListTable,
-	safeSet,
 	getOneListEntriesMatchedWithGames,
 } from '../helpers/db';
 import { GameSimplified as GameType } from '../types/graphQL';
 import { Platform } from '../database/models/platform';
 import { Genre } from '../database/models/genre';
-import { dbGameToGraphQLFormat } from '../helpers/commons';
+import {
+	dbGameToGraphQLFormat,
+	dbGameListToGraphQLFormat,
+} from '../helpers/commons';
+import { type } from 'os';
 
 const EMPTY: never[] = [];
 
@@ -56,21 +59,16 @@ const getQueryToGetGamesList = (
 	};
 };
 
+type getGameFromListProps = {
+	listId: number;
+	platforms: number[];
+	genres: number[];
+	limit: number;
+	offset: number;
+};
 export const getGamesFromList = async (
 	_parents: undefined,
-	{
-		listId,
-		platforms,
-		genres,
-		limit,
-		offset,
-	}: {
-		listId: number;
-		platforms: number[];
-		genres: number[];
-		limit: number;
-		offset: number;
-	},
+	{ listId, platforms, genres, limit, offset }: getGameFromListProps,
 	context: Context,
 ) => {
 	const userId = await getUserId(context);
@@ -81,17 +79,18 @@ export const getGamesFromList = async (
 		listId,
 	);
 	const count = await UserGameList.count(query);
-	return UserGameList.findAll({
+	const userGamesList = await UserGameList.findAll({
 		...query,
 		order: ['gameId'],
 		limit,
 		offset,
-	}).then((value) => {
-		return {
-			games: value.map((userGame) => userGame.game),
-			count,
-		};
 	});
+	const games = userGamesList.map((userGame) => userGame.game);
+	const gamesAndList = await dbGameListToGraphQLFormat(games);
+	return {
+		gamesAndList,
+		count,
+	};
 };
 
 export const addOrMoveGameToList = async (

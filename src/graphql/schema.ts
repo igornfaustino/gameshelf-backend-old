@@ -5,43 +5,52 @@ module.exports = gql`
 		token: String
 		user: User
 	}
+
 	type User {
 		name: String!
 		email: String!
 	}
+
 	type Genre {
 		id: ID
 		name: String!
 	}
+
 	type Platform {
 		id: ID
 		name: String!
 		abbreviation: String
 	}
+
 	type List {
 		id: ID
 		name: String
 	}
-	type GameSimplifiedFromAPI {
+
+	type GameSimplified {
 		id: ID
 		name: String
 		coverURL: String
 		genres: [Genre]
 		platforms: [Platform]
 	}
+
 	type GameAndList {
 		id: ID
-		gameInfo: GameSimplifiedFromAPI
+		gameInfo: GameSimplified
 		list: List
 	}
+
 	type Search {
 		gamesAndList: [GameAndList]
 		count: Int
 	}
+
 	type ListAndCount {
 		list: List
 		count: Int
 	}
+
 	type Query {
 		searchGames(
 			search: String!
@@ -61,6 +70,7 @@ module.exports = gql`
 		genres: [Genre]
 		lists: [ListAndCount]
 	}
+
 	type Mutation {
 		singUp(name: String!, email: String!, password: String!): AuthPayload!
 		login(email: String!, password: String!): AuthPayload!

@@ -1,6 +1,6 @@
 import { searchGames } from '../controllers/igdb';
-import { getPlatforms } from '../controllers/platforms';
-import { getGenres } from '../controllers/genre';
+import { getPlatforms, getGamePlatforms } from '../controllers/platforms';
+import { getGenres, getGameGenres } from '../controllers/genre';
 import { getLists } from '../controllers/list';
 import { singUp, login } from '../controllers/user';
 import {
@@ -11,6 +11,10 @@ import {
 } from '../controllers/game';
 
 module.exports = {
+	// GameSimplified: {
+	// 	genres: getGameGenres,
+	// 	platforms: getGamePlatforms,
+	// },
 	GameAndList: {
 		list: getGameList,
 	},
